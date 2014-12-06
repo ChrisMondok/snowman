@@ -2,6 +2,10 @@ window.addEventListener('load', function() {
 	letsDoThis();
 });
 
+function log(message) {
+	console.log(message);
+}
+
 function letsDoThis() {
 	var canvas = document.querySelector('canvas');
 
@@ -36,6 +40,15 @@ function letsDoThis() {
 	}
 
 	Tick();
+
+	var logUl = document.getElementById('log');
+
+	log = function(message) {
+		var li = document.createElement('li');
+		li.innerHTML = message;
+		logUl.appendChild(li);
+		li.scrollIntoView();
+	};
 }
 
 function extend(base, ctor) {

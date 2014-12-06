@@ -74,10 +74,18 @@ Game.prototype.peerOpened = function(peer) {
 };
 
 Game.prototype.gotConnection = function(peer, dataConnection) {
-	var track = this.tracks.find({id: dataConnection.id});
+	var playerId = dataConnection.peer;
+	var name = dataConnection.metadata.name;
+	var track = this.tracks.find({id: playerId});
 	if(!track) {
-		track = new Track(dataConnection.id);
+		log(name+" joined");
+		track = new Track(playerId, name);
 		this.tracks.push(track);
+	}
+	else {
+		log(name+" reconnected");
+		track.name = name;
+		track.dead = false;
 	}
 
 	dataConnection.on("data", function(message) {
@@ -97,4 +105,13 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 				break;
 		}
 	});
+
+	dataConnection.on("close", function() {
+		track.dead = true;
+		log(name + " disconnected");
+	});
 };
+
+Game.prototype.dropDeadPlayers = function() {
+	this.tracks.remove({dead: true});
+}

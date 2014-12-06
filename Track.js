@@ -1,12 +1,16 @@
-function Track(id) {
+function Track(id, name) {
 	this.pawns = [];
 
 	this.id = id;
+	this.name = name;
 
 	this.snowman = new Snowman(this);
 	this.snowman.y = this.rows - 1;
 	this.snowman.x = Math.floor((this.lanes - 1)/2);
 	this.pawns.push(this.snowman);
+
+	this.dead = false;
+	this.hasBeenDeadFor = 0;
 }
 
 Track.BORDER_WIDTH = 2;
@@ -16,8 +20,13 @@ Track.prototype.lanes = 4;
 Track.prototype.rows = 100;
 
 Track.prototype.tick = function(dt) {
-	for(var i = 0; i < this.pawns.length; i++)
-		this.pawns[i].tick(dt);
+	if(this.dead)
+		this.hasBeenDeadFor += dt;
+	else {
+		this.hasBeenDeadFor = 0;
+		for(var i = 0; i < this.pawns.length; i++)
+			this.pawns[i].tick(dt);
+	}
 };
 
 Track.prototype.draw = function(ctx, dt) {
@@ -38,6 +47,12 @@ Track.prototype.draw = function(ctx, dt) {
 	for(var i = 0; i < this.pawns.length; i++)
 		this.pawns[i].draw(ctx, dt);
 	ctx.restore();
+
+	if(this.dead) {
+		ctx.globalAlpha = 0.25 + Math.sin(this.hasBeenDeadFor / 1000 * Math.PI * 2)/4;
+		ctx.fillStyle = "white";
+		ctx.fillRect(0, 0, this.width, this.height);
+	}
 	ctx.restore();
 };
 
