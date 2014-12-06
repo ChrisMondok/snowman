@@ -17,7 +17,7 @@ function Game(canvas) {
 }
 
 Game.prototype.reset = function() {
-	this.trackFactory = new TrackFactory(4, 10, 10);
+	this.trackFactory = new TrackFactory(4, 50, 100);
 	this.tracks.forEach(function(track) {
 		track.reset(this.trackFactory);
 	}, this);
