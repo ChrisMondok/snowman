@@ -1,9 +1,13 @@
 var Snowman = extend(Pawn, function Snowman(track){
 	this.track = track;
-	this.speed = 1/1000; //one hop per second
 
 	window.snowman = this;
 });
+
+Snowman.MAX_SPEED = 0.002;
+
+Snowman.prototype.speed = 1/1000;
+Snowman.prototype.acceleration = 0.0001;
 
 Snowman.prototype.tick = function(dt) {
 	Pawn.prototype.tick.apply(this, arguments);
@@ -12,11 +16,14 @@ Snowman.prototype.tick = function(dt) {
 
 	if(!this.track.canMoveOnto(this.x, this.y.floor())) {
 		this.y = (this.y).floor() + 1;
+		this.speed = Snowman.prototype.speed;
 	}
 
 	//TODO: win
 	if(this.y === 0)
 		this.y = this.track.rows - 1;
+	
+	this.speed = Math.min(Snowman.MAX_SPEED, this.speed + this.acceleration * dt / 1000);
 };
 
 Snowman.prototype.size = GRID_SIZE * (3/5);
