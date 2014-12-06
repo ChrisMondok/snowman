@@ -12,8 +12,7 @@ function makePeer(callback, desiredId) {
 		if(err.type == "unavailable-id")
 			this.makePeer(callback);
 		else {
-			console.error("Peer error");
-			console.error(err);
+			alert("Error connecting to signaling server: "+JSON.stringify(err));
 		}
 	});
 

@@ -70,6 +70,10 @@ function connectToGame(peer, gamePeerId, name) {
 		broadcastOrientation();
 	});
 
+	connection.on("error", function(error) {
+		alert("ERROR connecting to game: "+JSON.stringify(error));
+	});
+
 	connection.on("close", goBackToTheForm);
 }
 

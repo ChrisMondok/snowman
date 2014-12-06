@@ -4,19 +4,25 @@ function Track(id, name) {
 	this.id = id;
 	this.name = name;
 
-	this.snowman = new Snowman(this);
-	this.snowman.y = this.rows - 1;
-	this.snowman.x = Math.floor((this.lanes - 1)/2);
-	this.pawns.push(this.snowman);
-
 	this.dead = false;
 	this.hasBeenDeadFor = 0;
-
-	var rock = new Rock();
-	rock.x = 1;
-	rock.y = 3;
-	this.pawns.unshift(rock);
 }
+
+Track.prototype.reset = function(trackFactory) {
+	if(!(trackFactory instanceof TrackFactory))
+		throw new TypeError("What is this? I can't work with this!");
+
+	this.pawns = trackFactory.entities.slice(0);
+
+	this.lanes = trackFactory.lanes;
+	this.rows = trackFactory.rows;
+
+	snowman = new Snowman(this);
+	snowman.y = this.rows - 1;
+	snowman.x = Math.floor((this.lanes - 1)/2);
+	snowman.speed = trackFactory.snowmanSpeed;
+	this.pawns.push(snowman);
+};
 
 Track.BORDER_WIDTH = 2;
 
@@ -25,26 +31,44 @@ Track.prototype.lanes = 4;
 Track.prototype.rows = 10;
 
 Track.prototype.tick = function(dt) {
-	if(this.dead)
+	if(this.dead) {
 		this.hasBeenDeadFor += dt;
-	else {
-		this.hasBeenDeadFor = 0;
-		for(var i = 0; i < this.pawns.length; i++)
-			this.pawns[i].tick(dt);
+		return;
 	}
-};
 
-Track.prototype.addPawn = function(pawn) {
-	this.pawns = this.pawns.concat(pawn).sortBy('y');
+	this.hasBeenDeadFor = 0;
+	for(var i = 0; i < this.pawns.length; i++)
+		this.pawns[i].tick(dt);
+
+	this.sortPawns();
 };
 
 Track.prototype.sortPawns = function() {
 	this.pawns = this.pawns.sortBy('y');
 };
 
+Track.prototype.moveLeft = function() {
+	var snowman = this.getSnowman();
+	if(snowman)
+		snowman.moveLeft();
+};
+
+Track.prototype.moveRight = function() {
+	var snowman = this.getSnowman();
+	if(snowman)
+		snowman.moveRight();
+};
+
+Track.prototype.getSnowman = function() {
+	return this.pawns.filter(function(pawn) {return pawn instanceof Snowman;})[0];
+};
+
 Track.prototype.draw = function(ctx, dt) {
 	ctx.save();
-	var cameraY = this.snowman.cy + GRID_SIZE * 2 - ctx.canvas.height;
+	var snowman = this.getSnowman();
+	var cameraY = 0;
+	if(snowman)
+		cameraY = snowman.cy + GRID_SIZE * 2 - ctx.canvas.height;
 
 	ctx.translate(0, - cameraY);
 
@@ -80,14 +104,17 @@ Track.prototype.canMoveOnto = function(x, y) {
 };
 
 Track.prototype.drawName = function(ctx, dt) {
+	var snowman = this.getSnowman();
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
 	ctx.font = "16px sans-serif";
 	ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
 	ctx.fillRect(15, ctx.canvas.height - 46, this.width - 30, 30);
 	ctx.fillStyle = "rgba(100, 100, 255, 1)";
-	var progress = (this.rows - this.snowman.y) / this.rows;
-	ctx.fillRect(15, ctx.canvas.height - 26, progress * (this.width - 30), 10);
+	if(snowman) {
+		var progress = (this.rows - snowman.y) / this.rows;
+		ctx.fillRect(15, ctx.canvas.height - 26, progress * (this.width - 30), 10);
+	}
 	ctx.fillStyle = "black";
 	ctx.fillText(this.name, this.width / 2, ctx.canvas.height - 30, this.width - 30);
 };

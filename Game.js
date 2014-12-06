@@ -12,7 +12,16 @@ function Game(canvas) {
 		else
 			this.peerOpened(peer);
 	}.bind(this), desiredId || undefined);
+
+	this.reset();
 }
+
+Game.prototype.reset = function() {
+	this.trackFactory = new TrackFactory(4, 10, 10);
+	this.tracks.forEach(function(track) {
+		track.reset(this.trackFactory);
+	}, this);
+};
 
 Game.prototype.stepInterval = 1000;
 
@@ -83,6 +92,7 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 	if(!track) {
 		log(name+" joined");
 		track = new Track(playerId, name);
+		track.reset(this.trackFactory);
 		this.tracks.push(track);
 	}
 	else {
@@ -99,10 +109,10 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 	dataConnection.on("data", function(message) {
 		switch(message) {
 			case "pressedLeft":
-				track.snowman.moveLeft();
+				track.moveLeft();
 				break;
 			case "pressedRight":
-				track.snowman.moveRight();
+				track.moveRight();
 				break;
 			case "releasedLeft":
 			case "releasedRight":
