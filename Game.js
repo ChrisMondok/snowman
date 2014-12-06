@@ -124,6 +124,10 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 				dataConnection.close();
 				this.tracks.remove(track);
 				break;
+			case "reset":
+				log(name+ " has restarted");
+				track.reset(this.trackFactory);
+				break;
 			case "ready":
 				track.ready = true;
 				break;

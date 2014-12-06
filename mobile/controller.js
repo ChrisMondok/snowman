@@ -25,6 +25,7 @@ function setUpButtons() {
 	var leftButton = document.getElementById("left");
 	var rightButton = document.getElementById("right");
 	var quitButton = document.getElementById("quit-button");
+	var resetButton = document.getElementById("reset-button");
 
 	leftButton.addEventListener("touchstart", function(e) {
 		e.preventDefault();
@@ -57,6 +58,11 @@ function setUpButtons() {
 	quitButton.addEventListener("click", function() {
 		if(connection)
 			connection.send("quit");
+	});
+
+	resetButton.addEventListener("click", function() {
+		if(connection)
+			connection.send("reset");
 	});
 }
 
