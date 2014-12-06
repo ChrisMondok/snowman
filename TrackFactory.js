@@ -8,16 +8,29 @@ function TrackFactory(lanes, rows, numObstacles) {
 
 	var retries = 0;
 
-	while(this.entities.length < numObstacles && retries < 100) {
+	var started = new Date();
+	log("Creating a "+lanes+" by "+rows+" level with "+numObstacles+" obstacles");
+
+	while(this.entities.length < numObstacles && retries < 10) {
 		var newObstacle = this.makeObstacle();
-		if(this.entities.any({x: newObstacle.x, y: newObstacle.y}) || this.levelIsNotPlayable(this.entities.concat(newObstacle)))
+		if(
+			this.entities.any({x: newObstacle.x, y: newObstacle.y})
+			|| this.levelIsNotPlayable(this.entities.concat(newObstacle))) {
 			retries++;
-		else
+		}
+		else {
 			this.entities.push(newObstacle);
+			retries = 0;
+		}
 	}
 
-	if(retries >= 100)
-		log("Warning: failed to place some obstacles");
+	if(this.entities.length < numObstacles) {
+		var skipped = numObstacles - this.entities.length;
+		log("Warning: failed to place "+skipped+" obstacles");
+	}
+
+	var duration = new Date() - started;
+	log("Level created in "+duration/1000+" ms");
 }
 
 TrackFactory.prototype.levelIsNotPlayable = function(obstacles) {
