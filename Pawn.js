@@ -4,6 +4,8 @@ function Pawn() {
 Pawn.prototype.x = 0;
 Pawn.prototype.y = 0;
 
+Pawn.prototype.blocksMovement = false;
+
 Pawn.prototype.tick = function(dt) {
 };
 

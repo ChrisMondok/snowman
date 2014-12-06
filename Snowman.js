@@ -7,20 +7,28 @@ var Snowman = extend(Pawn, function Snowman(track){
 
 Snowman.prototype.tick = function(dt) {
 	Pawn.prototype.tick.apply(this, arguments);
+
 	this.y -= this.speed * dt;
 
-	if(this.y < 0)
+	if(!this.track.canMoveOnto(this.x, this.y.floor())) {
+		this.y = (this.y).floor() + 1;
+	}
+
+	//TODO: win
+	if(this.y === 0)
 		this.y = this.track.rows - 1;
 };
 
 Snowman.prototype.size = GRID_SIZE * (3/5);
 
 Snowman.prototype.moveLeft = function() {
-	this.x = Math.max(0, this.x - 1);
+	if(this.track.canMoveOnto(this.x - 1, this.y.round()))
+		this.x--;
 };
 
 Snowman.prototype.moveRight = function() {
-	this.x = Math.min(this.track.lanes - 1, this.x + 1);
+	if(this.track.canMoveOnto(this.x + 1, this.y.round()))
+		this.x++;
 };
 
 Snowman.prototype.draw = function(ctx, dt) {
@@ -78,5 +86,5 @@ Snowman.prototype.draw = function(ctx, dt) {
 };
 
 Snowman.prototype.getAnimationPhase = function() {
-	return 1 - this.y.frac();
+	return (1 - this.y.frac()) % 1;
 };

@@ -11,13 +11,18 @@ function Track(id, name) {
 
 	this.dead = false;
 	this.hasBeenDeadFor = 0;
+
+	var rock = new Rock();
+	rock.x = 1;
+	rock.y = 3;
+	this.pawns.unshift(rock);
 }
 
 Track.BORDER_WIDTH = 2;
 
 Track.prototype.lanes = 4;
 
-Track.prototype.rows = 100;
+Track.prototype.rows = 10;
 
 Track.prototype.tick = function(dt) {
 	if(this.dead)
@@ -27,6 +32,14 @@ Track.prototype.tick = function(dt) {
 		for(var i = 0; i < this.pawns.length; i++)
 			this.pawns[i].tick(dt);
 	}
+};
+
+Track.prototype.addPawn = function(pawn) {
+	this.pawns = this.pawns.concat(pawn).sortBy('y');
+};
+
+Track.prototype.sortPawns = function() {
+	this.pawns = this.pawns.sortBy('y');
 };
 
 Track.prototype.draw = function(ctx, dt) {
@@ -56,6 +69,14 @@ Track.prototype.draw = function(ctx, dt) {
 	ctx.restore();
 
 	this.drawName(ctx, dt);
+};
+
+Track.prototype.canMoveOnto = function(x, y) {
+	if(x < 0 || x >= this.lanes)
+		return false;
+	if(y < 0 || y >= this.rows)
+		return false;
+	return !this.pawns.filter({x: x, y: y, blocksMovement: true}).length;
 };
 
 Track.prototype.drawName = function(ctx, dt) {
