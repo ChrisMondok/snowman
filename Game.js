@@ -17,8 +17,11 @@ function Game(canvas) {
 Game.prototype.stepInterval = 1000;
 
 Game.prototype.tick = function(dt) {
-	for(var i = 0; i < this.tracks.length; i++)
-		this.tracks[i].tick(dt);
+	this.paused = game.tracks.any({ready: false});
+	if(!this.paused) {
+		for(var i = 0; i < this.tracks.length; i++)
+			this.tracks[i].tick(dt);
+	}
 };
 
 Game.prototype.draw = function(dt) {
@@ -88,6 +91,11 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 		track.dead = false;
 	}
 
+	dataConnection.once("data", function(message) {
+		if(message != "notReady")
+			track.ready = true;
+	});
+
 	dataConnection.on("data", function(message) {
 		switch(message) {
 			case "pressedLeft":
@@ -100,18 +108,41 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 			case "releasedRight":
 				//do I care?
 				break;
+			case "quit":
+				log(name + " quit");
+				track.dead = true;
+				dataConnection.close();
+				this.tracks.remove(track);
+				break;
+			case "ready":
+				track.ready = true;
+				break;
+			case "notReady":
+				track.ready = false;
+				break;
 			default:
 				console.log("I can't interpret "+message);
 				break;
 		}
-	});
+	}.bind(this));
 
 	dataConnection.on("close", function() {
+		if(!track.dead)
+			log(name + " disconnected");
 		track.dead = true;
-		log(name + " disconnected");
 	});
 };
 
 Game.prototype.dropDeadPlayers = function() {
 	this.tracks.remove({dead: true});
-}
+};
+
+Object.defineProperty(Game.prototype, "paused", {
+	get: function() {return this._paused;},
+	set: function(p) {
+		if(p == this._paused)
+			return;
+		log(p ? "Game paused" : "Game resumed");
+		this._paused = p;
+	}
+});

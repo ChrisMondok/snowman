@@ -54,6 +54,18 @@ Track.prototype.draw = function(ctx, dt) {
 		ctx.fillRect(0, 0, this.width, this.height);
 	}
 	ctx.restore();
+
+	this.drawName(ctx, dt);
+};
+
+Track.prototype.drawName = function(ctx, dt) {
+	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
+	ctx.font = "16px sans-serif";
+	ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+	ctx.fillRect(15, ctx.canvas.height - 46, this.width - 30, 30);
+	ctx.fillStyle = "black";
+	ctx.fillText(this.name, this.width / 2, ctx.canvas.height - 30, this.width - 30);
 };
 
 Track.prototype.drawLanes = function(ctx, dt) {

@@ -19,3 +19,23 @@ html, body {
 #right {
 	right: 0;
 }
+
+@media screen and (orientation: portrait) {
+	.landscape {
+		display: none;
+	}
+
+	.portrait {
+		display: block;
+	}
+}
+
+@media screen and (orientation: landscape) {
+	.portrait {
+		display: none;
+	}
+
+	.landscape {
+		display: block;
+	}
+}

@@ -3,12 +3,23 @@
 	<head>
 		<title>Client</title>
 		<link rel="stylesheet" href="controller.css"/>
+		<meta name="viewport" content="height=device-height, width=device-width, user-scalable=no, initial-scale=1.0"/>
 		<script src="http://cdn.peerjs.com/0.3/peer.min.js"></script>
 		<script src="../common.js"></script>
 		<script src="controller.js"></script>
 	</head>
 	<body>
-		<div id="left" class="half"></div>
-		<div id="right" class="half"></div>
+		<div id="left" class="landscape half"></div>
+		<div id="right" class="landscape half"></div>
+		<div class="portrait">
+			Instructions:
+			<ul>
+				<li> Tap the left side of your screen to move left. </li>
+				<li> Tap the right half of your screen to move right. </li>
+				<li> Hold your phone in portrait to pause the game. </li>
+				<li> Rotate your phone when you are ready </li>
+			</ul>
+			<button id="quit-button">Quit</button>
+		</div>
 	</body>
 </html>
