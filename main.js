@@ -9,6 +9,15 @@ function log(message) {
 function letsDoThis() {
 	var canvas = document.querySelector("canvas");
 
+	var logUl = document.getElementById("log");
+
+	log = function(message) {
+		var li = document.createElement("li");
+		li.innerHTML = message;
+		logUl.appendChild(li);
+		li.scrollIntoView();
+	};
+
 	function resizeCanvas() {
 		canvas.setAttribute("width", canvas.offsetWidth);
 		canvas.setAttribute("height", canvas.offsetHeight);
@@ -40,15 +49,6 @@ function letsDoThis() {
 	}
 
 	Tick();
-
-	var logUl = document.getElementById("log");
-
-	log = function(message) {
-		var li = document.createElement("li");
-		li.innerHTML = message;
-		logUl.appendChild(li);
-		li.scrollIntoView();
-	};
 
 	document.getElementById("drop-dead-players-button").addEventListener("click", function() {
 		game.dropDeadPlayers();
