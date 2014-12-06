@@ -1,5 +1,7 @@
-function Track() {
+function Track(id) {
 	this.pawns = [];
+
+	this.id = id;
 
 	this.snowman = new Snowman(this);
 	this.snowman.y = this.rows - 1;

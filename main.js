@@ -16,7 +16,7 @@ function letsDoThis() {
 
 	var game = window.game = new Game(canvas);
 	
-	game.tracks.push(new Track());
+	//game.tracks.push(new Track());
 
 	var lastTick = new Date();
 

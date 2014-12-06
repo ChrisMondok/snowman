@@ -3,11 +3,19 @@
 	<head>
 		<title>This theme kind of sucks</title>
 		<link rel="stylesheet" href="style.css"/>
+		<!--other people's stuff-->
 		<script src="http://sugarjs.com/release/current/sugar.min.js"></script>
+		<script src="http://cdn.peerjs.com/0.3/peer.min.js"></script>
+		<script src="qrcode.min.js"></script>
+
+		<!--infrastructurey things-->
 		<script src="extensions.js"></script>
+		<script src="common.js"></script>
 		<script src="constants.js"></script>
 		<script src="main.js"></script>
 		<script src="ease.js"></script>
+
+		<!--game types-->
 		<script src="Game.js"></script>
 		<script src="Track.js"></script>
 		<script src="Pawn.js"></script>
@@ -15,5 +23,6 @@
 	</head>
 	<body>
 		<canvas id="screen"></canvas>
+		<div id="qrcode-container"></div>
 	</body>
 </html>

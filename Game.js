@@ -1,7 +1,17 @@
 function Game(canvas) {
-	this.ctx = canvas.getContext('2d');	
+	this.ctx = canvas.getContext("2d");	
 
 	this.tracks = [];
+
+	var desiredId = localStorage.getItem("last-peer-id");
+	makePeer(function(err, peer) {
+		if(err) {
+			console.log(err);
+			debugger;
+		}
+		else
+			this.peerOpened(peer);
+	}.bind(this), desiredId || undefined);
 }
 
 Game.prototype.stepInterval = 1000;
@@ -46,4 +56,41 @@ Game.prototype.getTotalTrackWidth = function() {
 	}
 
 	return width;
+};
+
+Game.prototype.peerOpened = function(peer) {
+	var id = peer.id;
+	this.peer = peer;
+	localStorage.setItem("last-peer-id", id);
+
+	peer.on("connection", this.gotConnection.bind(this, peer));
+
+	var str = window.location.href + "mobile/?peerId="+id;
+	new QRCode(document.getElementById("qrcode-container"), str);
+};
+
+Game.prototype.gotConnection = function(peer, dataConnection) {
+	var track = this.tracks.find({id: dataConnection.id});
+	if(!track) {
+		track = new Track(dataConnection.id);
+		this.tracks.push(track);
+	}
+
+	dataConnection.on("data", function(message) {
+		switch(message) {
+			case "pressedLeft":
+				track.snowman.moveLeft();
+				break;
+			case "pressedRight":
+				track.snowman.moveRight();
+				break;
+			case "releasedLeft":
+			case "releasedRight":
+				//do I care?
+				break;
+			default:
+				console.log("I can't interpret "+message);
+				break;
+		}
+	});
 };

@@ -13,11 +13,15 @@ Snowman.prototype.tick = function(dt) {
 		this.y = this.track.rows - 1;
 };
 
+Snowman.prototype.size = GRID_SIZE * (3/5);
+
+Snowman.prototype.moveLeft = function() {
+	this.x = Math.max(0, this.x - 1);
+};
+
 Snowman.prototype.moveRight = function() {
 	this.x = Math.min(this.track.lanes - 1, this.x + 1);
 };
-
-Snowman.prototype.size = GRID_SIZE * (3/5);
 
 Snowman.prototype.draw = function(ctx, dt) {
 	ctx.strokeStyle = "black";
