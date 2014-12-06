@@ -1,19 +1,17 @@
 function Track() {
 	this.pawns = [];
 
-	var snowman = new Snowman(this);
-	snowman.y = this.rows - 1;
-	snowman.x = Math.floor((this.lanes - 1)/2);
-	this.pawns.push(snowman);
+	this.snowman = new Snowman(this);
+	this.snowman.y = this.rows - 1;
+	this.snowman.x = Math.floor((this.lanes - 1)/2);
+	this.pawns.push(this.snowman);
 }
 
 Track.BORDER_WIDTH = 2;
 
 Track.prototype.lanes = 4;
 
-Track.prototype.rows = 10;
-
-Track.prototype.cameraY = 0;
+Track.prototype.rows = 100;
 
 Track.prototype.tick = function(dt) {
 	for(var i = 0; i < this.pawns.length; i++)
@@ -21,6 +19,11 @@ Track.prototype.tick = function(dt) {
 };
 
 Track.prototype.draw = function(ctx, dt) {
+	ctx.save();
+	var cameraY = this.snowman.cy + GRID_SIZE * 2 - ctx.canvas.height;
+
+	ctx.translate(0, - cameraY);
+
 	ctx.fillStyle = "black";
 	ctx.fillRect(0, 0, this.width, this.height);
 
@@ -28,10 +31,11 @@ Track.prototype.draw = function(ctx, dt) {
 	ctx.fillRect(Track.BORDER_WIDTH, Track.BORDER_WIDTH, this.width - 2 * Track.BORDER_WIDTH, this.height - 2 * Track.BORDER_WIDTH);
 
 	ctx.save();
-	ctx.translate(Track.BORDER_WIDTH, Track.BORDER_WIDTH + this.cameraY * GRID_SIZE);
+	ctx.translate(Track.BORDER_WIDTH, Track.BORDER_WIDTH);
 	this.drawLanes(ctx, dt);
 	for(var i = 0; i < this.pawns.length; i++)
 		this.pawns[i].draw(ctx, dt);
+	ctx.restore();
 	ctx.restore();
 };
 
