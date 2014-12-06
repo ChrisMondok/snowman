@@ -64,6 +64,9 @@ Track.prototype.drawName = function(ctx, dt) {
 	ctx.font = "16px sans-serif";
 	ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
 	ctx.fillRect(15, ctx.canvas.height - 46, this.width - 30, 30);
+	ctx.fillStyle = "rgba(100, 100, 255, 1)";
+	var progress = (this.rows - this.snowman.y) / this.rows;
+	ctx.fillRect(15, ctx.canvas.height - 26, progress * (this.width - 30), 10);
 	ctx.fillStyle = "black";
 	ctx.fillText(this.name, this.width / 2, ctx.canvas.height - 30, this.width - 30);
 };
