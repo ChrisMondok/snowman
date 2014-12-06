@@ -6,20 +6,32 @@ html, body {
 	height: 100%;
 
 	overflow: hidden;
+	display: flex;
+	flex-direction: row;
 
-	background-color: #CFC;
+	font-family: sans-serif;
 }
 
 canvas {
+	display: block;
 	box-sizing: border-box;
 
-	width: 100%;
+	background-color: #CFC;
+
 	height: 100%;
+	flex: 1 1 auto;
+}
+
+#right-side {
+	flex: 0 0 auto;
+	background-color: white;
 }
 
 #qrcode-container {
-	position: absolute;
-	left: 0;
-	top: 0;
-	border: 10px solid white;
+	margin: 10px;
+}
+
+#peer-id-display {
+	font-family: monospace;
+	font-size: 16px;
 }

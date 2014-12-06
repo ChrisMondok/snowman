@@ -65,8 +65,12 @@ Game.prototype.peerOpened = function(peer) {
 
 	peer.on("connection", this.gotConnection.bind(this, peer));
 
-	var str = window.location.href + "mobile/?peerId="+id;
-	new QRCode(document.getElementById("qrcode-container"), str);
+	var url = window.location.href + "mobile";
+	var params = "/?peerId="+id;
+	//var str = /?peerId="+id;
+	new QRCode(document.getElementById("qrcode-container"), url + params);
+	document.getElementById("url-display").innerHTML = url;
+	document.getElementById("peer-id-display").innerHTML = id;
 };
 
 Game.prototype.gotConnection = function(peer, dataConnection) {
