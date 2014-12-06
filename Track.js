@@ -1,12 +1,13 @@
 function Track() {
 	this.pawns = [];
-	this.snowman = new Snowman();
-	this.pawns.push(this.snowman);
+
+	var snowman = new Snowman(this);
+	snowman.y = this.rows - 1;
+	snowman.x = Math.floor((this.lanes - 1)/2);
+	this.pawns.push(snowman);
 }
 
 Track.BORDER_WIDTH = 2;
-
-Track.prototype.speed = 1/1000; //one hop per second
 
 Track.prototype.lanes = 4;
 
@@ -14,18 +15,9 @@ Track.prototype.rows = 10;
 
 Track.prototype.cameraY = 0;
 
-Track.prototype.lastHop = null;
-
 Track.prototype.tick = function(dt) {
 	for(var i = 0; i < this.pawns.length; i++)
 		this.pawns[i].tick(dt);
-
-	if(!this.lastHop)
-		this.lastHop = new Date();
-
-	var now = new Date();
-	if((now - this.lastHop) > 1/this.speed)
-		this.hop();
 };
 
 Track.prototype.draw = function(ctx, dt) {
@@ -36,7 +28,7 @@ Track.prototype.draw = function(ctx, dt) {
 	ctx.fillRect(Track.BORDER_WIDTH, Track.BORDER_WIDTH, this.width - 2 * Track.BORDER_WIDTH, this.height - 2 * Track.BORDER_WIDTH);
 
 	ctx.save();
-	ctx.translate(Track.BORDER_WIDTH, Track.BORDER_WIDTH + this.cameraY);
+	ctx.translate(Track.BORDER_WIDTH, Track.BORDER_WIDTH + this.cameraY * GRID_SIZE);
 	this.drawLanes(ctx, dt);
 	for(var i = 0; i < this.pawns.length; i++)
 		this.pawns[i].draw(ctx, dt);
@@ -59,10 +51,6 @@ Track.prototype.drawLanes = function(ctx, dt) {
 	}
 	
 	ctx.stroke();
-};
-
-Track.prototype.hop = function() {
-	
 };
 
 Object.defineProperty(Track.prototype, "width", {
