@@ -63,3 +63,10 @@ function extend(base, ctor) {
 	cls.prototype.constructor = ctor;
 	return cls;
 }
+
+function getImage(url) {
+	img = document.createElement('img');
+	img.style.display = "none";
+	img.src = url;
+	return img;
+}
