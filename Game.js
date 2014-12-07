@@ -57,6 +57,8 @@ Game.prototype.draw = function(dt) {
 		this.ctx.restore();
 	}
 	this.ctx.restore();
+
+	this.ctx.fillText(Math.floor(1000/dt), 10, 10);
 };
 
 Game.prototype.getTotalTrackWidth = function() {
@@ -81,7 +83,6 @@ Game.prototype.peerOpened = function(peer) {
 
 	var url = window.location.href + "mobile";
 	var params = "/?peerId="+id;
-	//var str = /?peerId="+id;
 	new QRCode(document.getElementById("qrcode-container"), url + params);
 	document.getElementById("url-display").innerHTML = url;
 	document.getElementById("peer-id-display").innerHTML = id;
