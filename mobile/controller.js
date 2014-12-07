@@ -122,13 +122,3 @@ function broadcastOrientation() {
 function goBackToTheForm() {
 	window.location.href = window.location.href.replace(/controller.html/,"index.html");
 }
-
-function playSound(name) {
-	var availableSounds = document.getElementsByClassName("sound-"+name);
-	var index = Math.floor(Math.random() * availableSounds.length);
-	var audio = availableSounds[index];
-
-	alert(audio);
-
-	audio.play();
-}
