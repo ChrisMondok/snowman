@@ -20,6 +20,7 @@ Snowman.prototype.acceleration = 0.0001;
 Snowman.prototype.freeze = function() {
 	this.frozen += 3000;
 	this.track.playSound("ice");
+	this.track.vibrate(500);
 };
 
 Snowman.prototype.tick = function(dt) {

@@ -24,30 +24,43 @@ Game.prototype.generateNextLevel = function() {
 	switch (this.difficulty) {
 		case 0:
 			return new TrackFactory(4, 50, 25);
-			break;
 		case 1:
 			return new TrackFactory(4, 50, 50);
-			break;
 		case 2:
 			return new TrackFactory(5, 10, 50);
+		case 3:
+			return new TrackFactory(3, 50, 40);
+		case 4:
+			return new TrackFactory(8, 50, 100);
+		case 5:
+			return new TrackFactory(12, 12, 100);
 		default:
 			break;
 	}
-	return new TrackFactory(8, 50, 100);
+	log("Out of difficulty levels, try this random one");
+	var width = 2 + Math.floor(Math.random() * 5);
+	var height = 20 + Math.floor(Math.random() * 100);
+	var obstacles = Math.floor(10 + Math.random() * width * height * 0.3);
+	return new TrackFactory(width, height, obstacles);
 };
 
 Game.prototype.reset = function() {
 	log("New round, difficulty is now "+this.difficulty);
-	this.trackFactory = this.generateNextLevel();
+	setTimeout(function() {
+		this.trackFactory = this.generateNextLevel();
+
+		this.tracks.forEach(function(track) {
+			track.reset(this.trackFactory);
+		}, this);
+
+	}.bind(this));
+
 	this.delay = 2000;
 
 	this.tracks.filter({won: false}).forEach(function(t) {
 		t.lose();
 	});
 
-	this.tracks.forEach(function(track) {
-		track.reset(this.trackFactory);
-	}, this);
 };
 
 Game.prototype.stepInterval = 1000;
