@@ -12,3 +12,5 @@ loadSound("stopped", "../sounds/loud.ogg");
 loadSound("grass", "../sounds/grass.ogg");
 loadSound("grass", "../sounds/grass-2.ogg");
 loadSound("grass", "../sounds/grass-3.ogg");
+loadSound("ice", "../sounds/ice-1.ogg");
+loadSound("ice", "../sounds/ice-2.ogg");

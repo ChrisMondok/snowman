@@ -6,10 +6,17 @@ var Snowman = extend(Pawn, function Snowman(track){
 	window.snowman = this;
 });
 
+Snowman.iceImage = getImage("images/ice.png");
+
 Snowman.MAX_SPEED = 0.004;
 
 Snowman.prototype.speed = 1/1000;
 Snowman.prototype.acceleration = 0.0001;
+
+Snowman.prototype.freeze = function() {
+	this.frozen = 3000;
+	this.track.playSound("ice");
+}
 
 Snowman.prototype.tick = function(dt) {
 	Pawn.prototype.tick.apply(this, arguments);
@@ -17,6 +24,8 @@ Snowman.prototype.tick = function(dt) {
 	var lastY = this.y;
 
 	this.y -= this.speed * dt;
+
+	this.frozen = Math.max(0, this.frozen - dt);
 
 	if(this.y <= 0) {
 		this.y = 0;
@@ -51,11 +60,15 @@ Snowman.prototype.tick = function(dt) {
 Snowman.prototype.size = GRID_SIZE * (3/5);
 
 Snowman.prototype.moveLeft = function() {
+	if(this.frozen)
+		return;
 	if(this.track.canMoveOnto(this.x - 1, this.y.round()))
 		this.x--;
 };
 
 Snowman.prototype.moveRight = function() {
+	if(this.frozen)
+		return;
 	if(this.track.canMoveOnto(this.x + 1, this.y.round()))
 		this.x++;
 };
@@ -67,9 +80,16 @@ Snowman.prototype.draw = function(ctx, dt) {
 
 	var animPhase = this.getAnimationPhase();
 
-	var y = (this.y.ceil() - easing.quadraticInOut(0, 1, animPhase) + 0.5) * GRID_SIZE;
-	
-	var z = easing.quadraticInOut(0, 1, Math.sin(animPhase * Math.PI));
+	var y, z;
+
+	if(this.frozen) {
+		y = this.cy;
+		z = 0;
+	}
+	else {
+		y = (this.y.ceil() - easing.quadraticInOut(0, 1, animPhase) + 0.5) * GRID_SIZE;
+		z = easing.quadraticInOut(0, 1, Math.sin(animPhase * Math.PI));
+	}
 
 	var baseRadius = this.size/2;
 	var middleRadius = baseRadius * 0.8;
@@ -112,6 +132,10 @@ Snowman.prototype.draw = function(ctx, dt) {
 	ctx.moveTo(this.cx + middleRadius, middleY);
 	ctx.lineTo(this.cx + middleRadius + armLength, middleY - armLength/4);
 	ctx.stroke();
+
+	if(this.frozen) {
+		ctx.drawImage(Snowman.iceImage, this.px,  this.py - 32);
+	}
 };
 
 Snowman.prototype.getAnimationPhase = function() {
