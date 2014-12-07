@@ -11,7 +11,7 @@ function TrackFactory(lanes, rows, numObstacles) {
 	var started = new Date();
 	log("Creating a "+lanes+" by "+rows+" level with "+numObstacles+" obstacles");
 
-	while(this.entities.length < numObstacles && retries < 10) {
+	while(this.entities.length < numObstacles && retries < 20) {
 		var newObstacle = this.makeObstacle();
 		if( this.entities.any({x: newObstacle.x, y: newObstacle.y}) ||
 			this.levelIsNotPlayable(this.entities.concat(newObstacle)) ) {
