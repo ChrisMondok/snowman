@@ -13,15 +13,36 @@ function Game(canvas) {
 			this.peerOpened(peer);
 	}.bind(this), desiredId || undefined);
 
-	this.reset();
-
 	this.difficulty = 0;
+
+	this.reset();
 
 	this.delay = 0;
 }
 
+Game.prototype.generateNextLevel = function() {
+	switch (this.difficulty) {
+		case 0:
+			return new TrackFactory(4, 50, 25);
+			break;
+		case 1:
+			return new TrackFactory(4, 50, 50);
+			break;
+		default:
+			break;
+	}
+	return new TrackFactory(8, 50, 100);
+};
+
 Game.prototype.reset = function() {
-	this.trackFactory = new TrackFactory(8, 50, 100);
+	log("New round, difficulty is now "+this.difficulty);
+	this.trackFactory = this.generateNextLevel();
+	this.delay = 2000;
+
+	this.tracks.filter({won: false}).forEach(function(t) {
+		t.lose();
+	});
+
 	this.tracks.forEach(function(track) {
 		track.reset(this.trackFactory);
 	}, this);
@@ -30,7 +51,20 @@ Game.prototype.reset = function() {
 Game.prototype.stepInterval = 1000;
 
 Game.prototype.tick = function(dt) {
-	this.paused = game.tracks.any({ready: false});
+
+	if(this.tracks.any({won: true})) {
+		this.difficulty++;
+		setTimeout(this.reset.bind(this));
+	}
+
+	if(this.tracks.length && this.tracks.all({lost: true})) {
+		playSound("everybodylost");
+		setTimeout(this.reset.bind(this));
+	}
+
+	if(this.delay)
+		this.delay = Math.max(0, this.delay - dt);
+
 	if(!this.paused) {
 		for(var i = 0; i < this.tracks.length; i++)
 			this.tracks[i].tick(dt);
@@ -38,6 +72,8 @@ Game.prototype.tick = function(dt) {
 };
 
 Game.prototype.draw = function(dt) {
+	if(this.delay)
+		return;
 	var canvas = this.ctx.canvas;
 	this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -117,10 +153,12 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 	dataConnection.on("data", function(message) {
 		switch(message) {
 			case "pressedLeft":
-				track.moveLeft();
+				if(!this.paused)
+					track.moveLeft();
 				break;
 			case "pressedRight":
-				track.moveRight();
+				if(!this.paused)
+					track.moveRight();
 				break;
 			case "releasedLeft":
 			case "releasedRight":
@@ -162,12 +200,10 @@ Game.prototype.dropDeadPlayers = function() {
 };
 
 Object.defineProperty(Game.prototype, "paused", {
-	get: function() {return this._paused;},
-	set: function(p) {
-		if(p == this._paused)
-			return;
-		log(p ? "Game paused" : "Game resumed");
-		this._paused = p;
+	get: function() {
+		if(this.delay)
+			return true;
+		return game.tracks.any({ready: false});
 	}
 });
 

@@ -16,6 +16,7 @@ function Track(id, name) {
 }
 
 Track.deadImage = getImage("images/disconnected.png");
+Track.starImage = getImage("images/star.png");
 
 Track.prototype.playSound = function() {};
 
@@ -39,6 +40,24 @@ Track.prototype.reset = function(trackFactory) {
 };
 
 Track.BORDER_WIDTH = 2;
+
+Track.prototype.win = function() {
+	if(this.won)
+		return;
+	var snowman = this.getSnowman();
+	if(snowman)
+		this.pawns.remove(snowman);
+	this.playSound("win");
+	this.won = true;
+	this.wins++;
+};
+
+Track.prototype.lose = function() {
+	if(this.lost)
+		return;
+	this.lost = true;
+	this.playSound("lose");
+};
 
 Track.prototype.lanes = 4;
 
@@ -134,11 +153,13 @@ Track.prototype.drawName = function(ctx, dt) {
 	ctx.fillText(this.name, this.width / 2, ctx.canvas.height - 30, this.width - 30);
 
 	if(this.wins) {
-		ctx.fillStyle = "gold";
-		ctx.beginPath();
-		ctx.arc(this.width - 15, ctx.canvas.height - 46, 16, 0, 2 * Math.PI, false);
-		ctx.fill();
-		ctx.fillStyle = "black";
+//		ctx.fillStyle = "gold";
+//		ctx.beginPath();
+//		ctx.arc(this.width - 15, ctx.canvas.height - 46, 16, 0, 2 * Math.PI, false);
+//		ctx.fill();
+		var imageWidth = Track.starImage.width;
+		var imageHeight = Track.starImage.height;
+		ctx.drawImage(Track.starImage, this.width - 15 - imageWidth/2, ctx.canvas.height - 46 - imageHeight/2);
 		ctx.fillText(this.wins, this.width - 15, ctx.canvas.height - 46);
 	}
 };
