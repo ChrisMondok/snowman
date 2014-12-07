@@ -12,6 +12,8 @@ Snowman.prototype.acceleration = 0.0001;
 Snowman.prototype.tick = function(dt) {
 	Pawn.prototype.tick.apply(this, arguments);
 
+	var lastY = this.y;
+
 	this.y -= this.speed * dt;
 
 	if(!this.track.canMoveOnto(this.x, this.y.floor())) {
@@ -24,6 +26,9 @@ Snowman.prototype.tick = function(dt) {
 		this.y = this.track.rows - 1;
 	
 	this.speed = Math.min(Snowman.MAX_SPEED, this.speed + this.acceleration * dt / 1000);
+
+	if(this.y.floor() != lastY.floor())
+		this.track.playSound("step");
 };
 
 Snowman.prototype.size = GRID_SIZE * (3/5);

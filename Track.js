@@ -8,6 +8,8 @@ function Track(id, name) {
 	this.hasBeenDeadFor = 0;
 }
 
+Track.prototype.playSound = function() {};
+
 Track.prototype.reset = function(trackFactory) {
 	if(!(trackFactory instanceof TrackFactory))
 		throw new TypeError("What is this? I can't work with this!");

@@ -97,9 +97,13 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 	}
 	else {
 		log(name+" reconnected");
-		track.name = name;
-		track.dead = false;
 	}
+
+	track.name = name;
+	track.dead = false;
+	track.playSound = function(name) {
+		dataConnection.send("playSound "+name);
+	};
 
 	dataConnection.once("data", function(message) {
 		if(message != "notReady")
@@ -144,6 +148,7 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 		if(!track.dead)
 			log(name + " disconnected");
 		track.dead = true;
+		track.playSound = function(url){log("Failed to play sound "+name+": track dead");};
 	});
 };
 

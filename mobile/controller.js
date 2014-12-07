@@ -80,6 +80,18 @@ function connectToGame(peer, gamePeerId, name) {
 		alert("ERROR connecting to game: "+JSON.stringify(error));
 	});
 
+	connection.on("data", function(message) {
+		var arr = message.split(" ");
+		switch(arr[0]) {
+			case "playSound":
+				playSound(arr[1]);
+				break;
+			default:
+				console.log("Can't handle "+arr[0]);
+				break;
+		}
+	});
+
 	connection.on("close", goBackToTheForm);
 }
 
@@ -98,4 +110,14 @@ function broadcastOrientation() {
 
 function goBackToTheForm() {
 	window.location.href = window.location.href.replace(/controller.html/,"index.html");
+}
+
+function playSound(name) {
+	var availableSounds = document.getElementsByClassName("sound-"+name);
+	var index = Math.floor(Math.random() * availableSounds.length);
+	var audio = availableSounds[index];
+
+	alert(audio);
+
+	audio.play();
 }
