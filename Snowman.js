@@ -3,12 +3,16 @@ var Snowman = extend(Pawn, function Snowman(track){
 
 	this.lost = false;
 
+	this.frozen = 0;
+	this.carrot = 0;
+
 	window.snowman = this;
 });
 
 Snowman.iceImage = getImage("images/ice.png");
 
 Snowman.MAX_SPEED = 0.004;
+Snowman.CARROT_SPEED = 0.005;
 
 Snowman.prototype.speed = 1/1000;
 Snowman.prototype.acceleration = 0.0001;
@@ -16,7 +20,7 @@ Snowman.prototype.acceleration = 0.0001;
 Snowman.prototype.freeze = function() {
 	this.frozen += 3000;
 	this.track.playSound("ice");
-}
+};
 
 Snowman.prototype.tick = function(dt) {
 	Pawn.prototype.tick.apply(this, arguments);
@@ -26,6 +30,7 @@ Snowman.prototype.tick = function(dt) {
 	this.y -= this.speed * dt;
 
 	this.frozen = Math.max(0, this.frozen - dt);
+	this.carrot = Math.max(0, this.carrot - dt);
 
 	if(this.y <= 0) {
 		this.y = 0;
@@ -52,6 +57,9 @@ Snowman.prototype.tick = function(dt) {
 		this.speed = Math.max(0, this.speed);
 	}
 
+	if(this.carrot)
+		this.speed = Snowman.CARROT_SPEED;
+
 	if(this.y.ceil() != lastY.ceil()) {
 		var pawnsIAmOnTopOf = this.track.pawns.filter({x: this.x, y: this.y.ceil()});
 
@@ -62,9 +70,15 @@ Snowman.prototype.tick = function(dt) {
 				notOnGrass = false;
 				this.speed /= 2;
 				this.track.playSound("grass");
+				this.track.pawns.remove(otherPawn);
 			}
 			if(otherPawn instanceof IcePowerup) {
 				this.track.game.freezeOtherTracks(this.track);
+				this.track.pawns.remove(otherPawn);
+			}
+			if(otherPawn instanceof CarrotPowerup) {
+				this.carrot = 2000;
+				this.track.pawns.remove(otherPawn);
 			}
 		}, this);
 

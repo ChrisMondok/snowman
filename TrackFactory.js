@@ -37,12 +37,28 @@ TrackFactory.prototype.levelIsNotPlayable = function(obstacles) {
 	return !lastPath;
 };
 
-TrackFactory.prototype.makeObstacle = function() {
-	
-	var obstacle = new ([Rock, Rock, Rock, Rock, Rock, Rock, Grass, Grass, Grass, IcePowerup].sample());
-	obstacle.x = Math.floor(Math.random() * this.lanes);
-	//don't put obstacles in the bottom row
-	obstacle.y = Math.floor(Math.random() * (this.rows - 2));
+(function() {
+	var weightedItemsCollection = [];
+	var i;
+	for(i = 0; i < 10; i++)
+		weightedItemsCollection.push(Rock);
 
-	return obstacle;
-};
+	for(i = 0; i < 5; i++)
+		weightedItemsCollection.push(Grass);
+	
+	for(i = 0; i < 1; i++)
+		weightedItemsCollection.push(IcePowerup);
+
+	for(i = 0; i < 1; i++)
+		weightedItemsCollection.push(CarrotPowerup);
+
+	TrackFactory.prototype.makeObstacle = function() {
+		
+		var obstacle = new (weightedItemsCollection.sample());
+		obstacle.x = Math.floor(Math.random() * this.lanes);
+		//don't put obstacles in the bottom row
+		obstacle.y = Math.floor(Math.random() * (this.rows - 2));
+
+		return obstacle;
+	};
+})();
