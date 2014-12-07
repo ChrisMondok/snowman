@@ -35,23 +35,23 @@ canvas {
 	padding-bottom: 1em;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 	flex: 0 0 auto;
+	margin: 10px 10px 0 10px;
 }
 
 #log-container {
 	flex: 1 1 auto;
-	padding-top: 1em;
 	border-top: 1px solid rgba(255, 255, 255, 0.3);
 	overflow-y: scroll;
 }
 
 ul#log {
 	list-style-type: none;
-	margin:0;
-	padding:0;
+	padding:10px;
+	margin: 0;
 }
 
 #qrcode-container {
-	margin: 10px;
+	margin: 10px 0;
 }
 
 #peer-id-display {
