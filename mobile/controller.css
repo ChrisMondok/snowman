@@ -3,6 +3,7 @@ html, body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
+	font-family: sans-serif;
 }
 
 .half {
@@ -10,6 +11,21 @@ html, body {
 	width: 50%;
 	top: 0;
 	bottom: 0;
+}
+
+.message {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	background-color: black;
+	color: white;
 }
 
 #left {
@@ -24,18 +40,10 @@ html, body {
 	.landscape {
 		display: none;
 	}
-
-	.portrait {
-		display: block;
-	}
 }
 
 @media screen and (orientation: landscape) {
 	.portrait {
 		display: none;
-	}
-
-	.landscape {
-		display: block;
 	}
 }

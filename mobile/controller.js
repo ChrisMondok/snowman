@@ -44,25 +44,21 @@ function setUpButtons() {
 	leftButton.addEventListener("touchstart", function(e) {
 		e.preventDefault();
 		send("pressedLeft");
-		leftButton.style.backgroundColor = "red";
 	});
 
 	leftButton.addEventListener("touchend", function(e) {
 		e.preventDefault();
 		send("releasedLeft");
-		leftButton.style.backgroundColor = "";
 	});
 
 	rightButton.addEventListener("touchstart", function(e) {
 		e.preventDefault();
 		send("pressedRight");
-		rightButton.style.backgroundColor = "green";
 	});
 
 	rightButton.addEventListener("touchend", function(e) {
 		e.preventDefault();
 		send("releasedRight");
-		rightButton.style.backgroundColor = "";
 	});
 
 	quitButton.addEventListener("click", function() {
