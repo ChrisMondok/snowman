@@ -111,11 +111,6 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 		dataConnection.send("vibrate "+ms);
 	};
 
-	dataConnection.once("data", function(message) {
-		if(message != "notReady")
-			track.ready = true;
-	});
-
 	dataConnection.on("data", function(message) {
 		switch(message) {
 			case "pressedLeft":
@@ -155,7 +150,7 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 			log(name + " disconnected");
 		track.dead = true;
 		track.playSound = function(url){log("Failed to play sound "+name+": track dead");};
-		track.vibrate = Track.prototype.vibrate
+		track.vibrate = Track.prototype.vibrate;
 	});
 };
 
