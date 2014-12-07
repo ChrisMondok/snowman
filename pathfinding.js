@@ -1,6 +1,5 @@
 window.lastPath = null;
 function findPathToFinish(obstacles, origin, numLanes) {
-	console.log("Looking for a path, numLanes is %s", numLanes);
 	var open = [{x: origin.x, y: origin.y, parent: null}];
 	var closed = [];
 
