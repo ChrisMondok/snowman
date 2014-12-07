@@ -51,15 +51,17 @@ Snowman.prototype.tick = function(dt) {
 		}
 	}
 
-	if(!this.frozen)
-		this.speed = Math.min(Snowman.MAX_SPEED, this.speed + this.acceleration * dt / 1000);
+	if(!this.frozen) {
+		if(this.carrot)
+			this.speed = Snowman.CARROT_SPEED;
+		else
+			this.speed = Math.min(Snowman.MAX_SPEED, this.speed + this.acceleration * dt / 1000);
+	}
 	else {
 		this.speed -= this.acceleration * dt / 1000;
 		this.speed = Math.max(0, this.speed);
 	}
 
-	if(this.carrot)
-		this.speed = Snowman.CARROT_SPEED;
 
 	if(this.y.ceil() != lastY.ceil()) {
 		var pawnsIAmOnTopOf = this.track.pawns.filter({x: this.x, y: this.y.ceil()});
