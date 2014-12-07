@@ -38,6 +38,14 @@ Track.prototype.reset = function(trackFactory) {
 	snowman.speed = trackFactory.snowmanSpeed;
 	this.pawns.push(snowman);
 
+	this.pawns.filter(function(pawn) {
+		return pawn instanceof ItemFactory;
+	}).forEach(function(factory) {
+		var item = factory.constructItem();
+		this.pawns.remove(factory);
+		this.pawns.add(item);
+	}, this);
+
 	this.won = false;
 	this.lost = false;
 };

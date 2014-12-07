@@ -40,17 +40,11 @@ TrackFactory.prototype.levelIsNotPlayable = function(obstacles) {
 (function() {
 	var weightedItemsCollection = [];
 	var i;
-	for(i = 0; i < 10; i++)
-		weightedItemsCollection.push(Rock);
-
 	for(i = 0; i < 5; i++)
-		weightedItemsCollection.push(Grass);
+		weightedItemsCollection.push(Rock);
 	
 	for(i = 0; i < 1; i++)
-		weightedItemsCollection.push(IcePowerup);
-
-	for(i = 0; i < 1; i++)
-		weightedItemsCollection.push(CarrotPowerup);
+		weightedItemsCollection.push(ItemFactory);
 
 	TrackFactory.prototype.makeObstacle = function() {
 		
