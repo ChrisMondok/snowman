@@ -41,8 +41,14 @@ Snowman.prototype.tick = function(dt) {
 
 	this.speed = Math.min(Snowman.MAX_SPEED, this.speed + this.acceleration * dt / 1000);
 
-	if(this.y.floor() != lastY.floor())
-		this.track.playSound("step");
+	if(this.y.ceil() != lastY.ceil()) {
+		if(this.track.pawns.filter({x:this.x, y: this.y.ceil()}).any(function(pawn) { return pawn instanceof Grass; })) {
+			this.speed /= 2;
+			this.track.playSound("grass");
+		}
+		else
+			this.track.playSound("step");
+	}
 };
 
 Snowman.prototype.win = function() {

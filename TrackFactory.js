@@ -13,9 +13,8 @@ function TrackFactory(lanes, rows, numObstacles) {
 
 	while(this.entities.length < numObstacles && retries < 10) {
 		var newObstacle = this.makeObstacle();
-		if(
-			this.entities.any({x: newObstacle.x, y: newObstacle.y})
-			|| this.levelIsNotPlayable(this.entities.concat(newObstacle))) {
+		if( this.entities.any({x: newObstacle.x, y: newObstacle.y}) ||
+			this.levelIsNotPlayable(this.entities.concat(newObstacle)) ) {
 			retries++;
 		}
 		else {
@@ -40,9 +39,8 @@ TrackFactory.prototype.levelIsNotPlayable = function(obstacles) {
 };
 
 TrackFactory.prototype.makeObstacle = function() {
-	//TODO: weight these based on distance or something?
 	
-	var obstacle = new ([Rock].sample());
+	var obstacle = new ([Rock, Rock, Grass].sample());
 	obstacle.x = Math.floor(Math.random() * this.lanes);
 	//don't put obstacles in the bottom row
 	obstacle.y = Math.floor(Math.random() * (this.rows - 2));

@@ -48,7 +48,7 @@ Track.prototype.tick = function(dt) {
 };
 
 Track.prototype.sortPawns = function() {
-	this.pawns = this.pawns.sortBy('y');
+	this.pawns = this.pawns.sortBy(function(p) {return p.y.ceil();});
 };
 
 Track.prototype.moveLeft = function() {
