@@ -27,43 +27,56 @@ function setUpButtons() {
 	var quitButton = document.getElementById("quit-button");
 	var resetButton = document.getElementById("reset-button");
 
+	document.addEventListener("keydown", function(k) {
+		if((k.key || k.keyIdentifier) == "Left")
+			send("pressedLeft");
+		if((k.key || k.keyIdentifier) == "Right")
+			send("pressedRight");
+	});
+
+	document.addEventListener("keyup", function(k) {
+		if((k.key || k.keyIdentifier) == "Left")
+			send("releasedLeft");
+		if((k.key || k.keyIdentifier) == "Right")
+			send("releasedRight");
+	});
+
 	leftButton.addEventListener("touchstart", function(e) {
 		e.preventDefault();
-		if(connection)
-			connection.send("pressedLeft");
+		send("pressedLeft");
 		leftButton.style.backgroundColor = "red";
 	});
 
 	leftButton.addEventListener("touchend", function(e) {
 		e.preventDefault();
-		if(connection)
-			connection.send("releasedLeft");
+		send("releasedLeft");
 		leftButton.style.backgroundColor = "";
 	});
 
 	rightButton.addEventListener("touchstart", function(e) {
 		e.preventDefault();
-		if(connection)
-			connection.send("pressedRight");
+		send("pressedRight");
 		rightButton.style.backgroundColor = "green";
 	});
 
 	rightButton.addEventListener("touchend", function(e) {
 		e.preventDefault();
-		if(connection)
-			connection.send("releasedRight");
+		send("releasedRight");
 		rightButton.style.backgroundColor = "";
 	});
 
 	quitButton.addEventListener("click", function() {
-		if(connection)
-			connection.send("quit");
+		send("quit");
 	});
 
 	resetButton.addEventListener("click", function() {
-		if(connection)
-			connection.send("reset");
+		send("reset");
 	});
+}
+
+function send(message) {
+	if(connection)
+		connection.send(message);
 }
 
 function connectToGame(peer, gamePeerId, name) {
@@ -107,8 +120,7 @@ if(window.screen && window.screen.orientation && window.screen.orientation.addEv
 
 function broadcastOrientation() {
 	var orientation = screen.orientation.type.replace(/-.*/,"");
-	if(connection)
-		connection.send(orientation == "landscape" ? "ready" : "notReady");
+	send(orientation == "landscape" ? "ready" : "notReady");
 }
 
 function goBackToTheForm() {
