@@ -38,7 +38,7 @@ Game.prototype.generateNextLevel = function() {
 			break;
 	}
 	log("Out of difficulty levels, try this random one");
-	var width = 2 + Math.floor(Math.random() * 5);
+	var width = 3 + Math.floor(Math.random() * 5);
 	var height = 20 + Math.floor(Math.random() * 100);
 	var obstacles = Math.floor(10 + Math.random() * width * height * 0.3);
 	return new TrackFactory(width, height, obstacles);
