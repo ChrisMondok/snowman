@@ -1,4 +1,4 @@
-function Track(id, name) {
+function Track(game, id, name) {
 	this.pawns = [];
 
 	this.id = id;
@@ -13,6 +13,8 @@ function Track(id, name) {
 	this.lost = false;
 
 	this.wins = 0;
+
+	this.game = game;
 }
 
 Track.deadImage = getImage("images/disconnected.png");

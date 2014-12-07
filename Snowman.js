@@ -14,7 +14,7 @@ Snowman.prototype.speed = 1/1000;
 Snowman.prototype.acceleration = 0.0001;
 
 Snowman.prototype.freeze = function() {
-	this.frozen = 3000;
+	this.frozen += 3000;
 	this.track.playSound("ice");
 }
 
@@ -45,14 +45,30 @@ Snowman.prototype.tick = function(dt) {
 		}
 	}
 
-	this.speed = Math.min(Snowman.MAX_SPEED, this.speed + this.acceleration * dt / 1000);
+	if(!this.frozen)
+		this.speed = Math.min(Snowman.MAX_SPEED, this.speed + this.acceleration * dt / 1000);
+	else {
+		this.speed -= this.acceleration * dt / 1000;
+		this.speed = Math.max(0, this.speed);
+	}
 
 	if(this.y.ceil() != lastY.ceil()) {
-		if(this.track.pawns.filter({x:this.x, y: this.y.ceil()}).any(function(pawn) { return pawn instanceof Grass; })) {
-			this.speed /= 2;
-			this.track.playSound("grass");
-		}
-		else
+		var pawnsIAmOnTopOf = this.track.pawns.filter({x: this.x, y: this.y.ceil()});
+
+		var notOnGrass = true;
+
+		pawnsIAmOnTopOf.forEach(function(otherPawn) {
+			if(otherPawn instanceof Grass) {
+				notOnGrass = false;
+				this.speed /= 2;
+				this.track.playSound("grass");
+			}
+			if(otherPawn instanceof IcePowerup) {
+				this.track.game.freezeOtherTracks(this.track);
+			}
+		}, this);
+
+		if(!this.frozen)
 			this.track.playSound("step");
 	}
 };

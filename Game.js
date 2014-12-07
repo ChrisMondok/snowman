@@ -128,13 +128,21 @@ Game.prototype.peerOpened = function(peer) {
 	document.getElementById("peer-id-display").innerHTML = id;
 };
 
+Game.prototype.freezeOtherTracks = function(track) {
+	this.tracks.exclude(track).forEach(function(target) {
+		var snowman = target.getSnowman();
+		if(snowman)
+			snowman.freeze();
+	});
+};
+
 Game.prototype.gotConnection = function(peer, dataConnection) {
 	var playerId = dataConnection.peer;
 	var name = dataConnection.metadata.name;
 	var track = this.tracks.find({id: playerId});
 	if(!track) {
 		log(name+" joined");
-		track = new Track(playerId, name);
+		track = new Track(this, playerId, name);
 		track.reset(this.trackFactory);
 		this.tracks.push(track);
 	}

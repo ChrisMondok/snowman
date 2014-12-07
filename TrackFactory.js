@@ -39,7 +39,7 @@ TrackFactory.prototype.levelIsNotPlayable = function(obstacles) {
 
 TrackFactory.prototype.makeObstacle = function() {
 	
-	var obstacle = new ([Rock, Rock, Grass].sample());
+	var obstacle = new ([Rock, Rock, Rock, Rock, Rock, Rock, Grass, Grass, Grass, IcePowerup].sample());
 	obstacle.x = Math.floor(Math.random() * this.lanes);
 	//don't put obstacles in the bottom row
 	obstacle.y = Math.floor(Math.random() * (this.rows - 2));
