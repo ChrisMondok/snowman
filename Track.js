@@ -8,6 +8,8 @@ function Track(id, name) {
 	this.hasBeenDeadFor = 0;
 
 	this.cameraY = this.rows * GRID_SIZE;
+
+	this.wins = 0;
 }
 
 Track.prototype.playSound = function() {};
@@ -120,6 +122,15 @@ Track.prototype.drawName = function(ctx, dt) {
 	}
 	ctx.fillStyle = "black";
 	ctx.fillText(this.name, this.width / 2, ctx.canvas.height - 30, this.width - 30);
+
+	if(this.wins) {
+		ctx.fillStyle = "gold";
+		ctx.beginPath();
+		ctx.arc(this.width - 15, ctx.canvas.height - 46, 16, 0, 2 * Math.PI, false);
+		ctx.fill();
+		ctx.fillStyle = "black";
+		ctx.fillText(this.wins, this.width - 15, ctx.canvas.height - 46);
+	}
 };
 
 Track.prototype.drawLanes = function(ctx, dt) {
