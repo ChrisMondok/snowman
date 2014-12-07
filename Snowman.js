@@ -1,10 +1,12 @@
 var Snowman = extend(Pawn, function Snowman(track){
 	this.track = track;
 
+	this.lost = false;
+
 	window.snowman = this;
 });
 
-Snowman.MAX_SPEED = 0.002;
+Snowman.MAX_SPEED = 0.004;
 
 Snowman.prototype.speed = 1/1000;
 Snowman.prototype.acceleration = 0.0001;
@@ -12,11 +14,13 @@ Snowman.prototype.acceleration = 0.0001;
 Snowman.prototype.tick = function(dt) {
 	Pawn.prototype.tick.apply(this, arguments);
 
+	if(this.lost)
+		return;
+
 	var lastY = this.y;
 
 	this.y -= this.speed * dt;
 
-	//TODO: win
 	if(this.y <= 0) {
 		this.y = 0;
 		this.win();
@@ -29,10 +33,12 @@ Snowman.prototype.tick = function(dt) {
 		if(this.y != lastY) {
 			this.track.playSound("stopped");
 			this.track.vibrate(100);
+			var pathToFinish = findPathToFinish(this.track.pawns, {x: this.x.round(), y: this.y.ceil()}, this.track.lanes);
+			if(!pathToFinish)
+				this.lose();
 		}
 	}
 
-	
 	this.speed = Math.min(Snowman.MAX_SPEED, this.speed + this.acceleration * dt / 1000);
 
 	if(this.y.floor() != lastY.floor())
@@ -42,6 +48,11 @@ Snowman.prototype.tick = function(dt) {
 Snowman.prototype.win = function() {
 	this.track.playSound("win");
 	this.track.pawns.remove(this);
+};
+
+Snowman.prototype.lose = function() {
+	this.track.playSound("lose");
+	this.lost = true;
 };
 
 Snowman.prototype.size = GRID_SIZE * (3/5);

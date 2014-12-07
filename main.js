@@ -38,7 +38,7 @@ function letsDoThis() {
 			return;
 
 		var now = new Date();
-		var dt = now - lastTick;
+		var dt = Math.min(500, now - lastTick);
 
 		game.tick(dt);
 		game.draw(dt);

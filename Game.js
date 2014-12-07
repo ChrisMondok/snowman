@@ -14,10 +14,12 @@ function Game(canvas) {
 	}.bind(this), desiredId || undefined);
 
 	this.reset();
+
+	this.difficulty = 0;
 }
 
 Game.prototype.reset = function() {
-	this.trackFactory = new TrackFactory(4, 50, 70);
+	this.trackFactory = new TrackFactory(8, 50, 100);
 	this.tracks.forEach(function(track) {
 		track.reset(this.trackFactory);
 	}, this);

@@ -29,11 +29,18 @@ function loadSound(name, url) {
 
 loadSound("win", "../sounds/yes.ogg");
 loadSound("win", "../sounds/hooray.ogg");
+loadSound("win", "../sounds/youwon.ogg");
+loadSound("lose", "../sounds/wompwomp.ogg");
+loadSound("lose", "../sounds/toobad.ogg");
+loadSound("lose", "../sounds/youlost.ogg");
 loadSound("step", "../sounds/step-0.ogg");
 loadSound("step", "../sounds/step-1.ogg");
 loadSound("step", "../sounds/step-2.ogg");
 loadSound("stopped", "../sounds/rock-1.ogg");
 loadSound("stopped", "../sounds/loud.ogg");
+loadSound("grass", "../sounds/grass.ogg");
+loadSound("grass", "../sounds/grass-2.ogg");
+loadSound("grass", "../sounds/grass-3.ogg");
 
 function playSound(name) {
 	if(!(name in sounds))

@@ -6,6 +6,8 @@ function Track(id, name) {
 
 	this.dead = false;
 	this.hasBeenDeadFor = 0;
+
+	this.cameraY = this.rows * GRID_SIZE;
 }
 
 Track.prototype.playSound = function() {};
@@ -68,10 +70,10 @@ Track.prototype.getSnowman = function() {
 Track.prototype.draw = function(ctx, dt) {
 	ctx.save();
 	var snowman = this.getSnowman();
-	var snowmanY = snowman && snowman.cy || 0;
-	cameraY = snowmanY + GRID_SIZE * 2 - ctx.canvas.height;
+	if(snowman)
+		this.cameraY = snowman.cy + GRID_SIZE * 2 - ctx.canvas.height;
 
-	ctx.translate(0, - cameraY);
+	ctx.translate(0, - this.cameraY);
 
 	ctx.fillStyle = "black";
 	ctx.fillRect(0, 0, this.width, this.height);
