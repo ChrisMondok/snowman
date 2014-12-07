@@ -16,19 +16,32 @@ Snowman.prototype.tick = function(dt) {
 
 	this.y -= this.speed * dt;
 
+	//TODO: win
+	if(this.y <= 0) {
+		this.y = 0;
+		this.win();
+		return;
+	}
+
 	if(!this.track.canMoveOnto(this.x, this.y.floor())) {
 		this.y = (this.y).floor() + 1;
 		this.speed = Snowman.prototype.speed;
+		if(this.y != lastY) {
+			this.track.playSound("stopped");
+			this.track.vibrate(100);
+		}
 	}
 
-	//TODO: win
-	if(this.y === 0)
-		this.y = this.track.rows - 1;
 	
 	this.speed = Math.min(Snowman.MAX_SPEED, this.speed + this.acceleration * dt / 1000);
 
 	if(this.y.floor() != lastY.floor())
 		this.track.playSound("step");
+};
+
+Snowman.prototype.win = function() {
+	this.track.playSound("win");
+	this.track.pawns.remove(this);
 };
 
 Snowman.prototype.size = GRID_SIZE * (3/5);

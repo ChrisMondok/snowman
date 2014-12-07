@@ -68,9 +68,8 @@ Track.prototype.getSnowman = function() {
 Track.prototype.draw = function(ctx, dt) {
 	ctx.save();
 	var snowman = this.getSnowman();
-	var cameraY = 0;
-	if(snowman)
-		cameraY = snowman.cy + GRID_SIZE * 2 - ctx.canvas.height;
+	var snowmanY = snowman && snowman.cy || 0;
+	cameraY = snowmanY + GRID_SIZE * 2 - ctx.canvas.height;
 
 	ctx.translate(0, - cameraY);
 

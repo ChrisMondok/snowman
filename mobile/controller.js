@@ -86,6 +86,9 @@ function connectToGame(peer, gamePeerId, name) {
 			case "playSound":
 				playSound(arr[1]);
 				break;
+			case "vibrate":
+				navigator.vibrate(arr[1]);
+				break;
 			default:
 				console.log("Can't handle "+arr[0]);
 				break;
