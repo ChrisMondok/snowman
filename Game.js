@@ -16,6 +16,8 @@ function Game(canvas) {
 	this.reset();
 
 	this.difficulty = 0;
+
+	this.delay = 0;
 }
 
 Game.prototype.reset = function() {
@@ -168,3 +170,5 @@ Object.defineProperty(Game.prototype, "paused", {
 		this._paused = p;
 	}
 });
+
+loadSound("everybodylost", "sounds/everybody-lost.ogg");

@@ -9,8 +9,13 @@ function Track(id, name) {
 
 	this.cameraY = this.rows * GRID_SIZE;
 
+	this.won = false;
+	this.lost = false;
+
 	this.wins = 0;
 }
+
+Track.deadImage = getImage("images/disconnected.png");
 
 Track.prototype.playSound = function() {};
 
@@ -28,6 +33,9 @@ Track.prototype.reset = function(trackFactory) {
 	snowman.x = Math.floor((this.lanes - 1)/2);
 	snowman.speed = trackFactory.snowmanSpeed;
 	this.pawns.push(snowman);
+
+	this.won = false;
+	this.lost = false;
 };
 
 Track.BORDER_WIDTH = 2;
@@ -90,14 +98,16 @@ Track.prototype.draw = function(ctx, dt) {
 		this.pawns[i].draw(ctx, dt);
 	ctx.restore();
 
-	if(this.dead) {
-		ctx.globalAlpha = 0.25 + Math.sin(this.hasBeenDeadFor / 1000 * Math.PI * 2)/4;
-		ctx.fillStyle = "white";
-		ctx.fillRect(0, 0, this.width, this.height);
-	}
 	ctx.restore();
 
+	if(!this.ready)
+		this.drawPaused(ctx, dt);
+
+	if(this.dead)
+		this.drawDead(ctx, dt);
+
 	this.drawName(ctx, dt);
+
 };
 
 Track.prototype.canMoveOnto = function(x, y) {
@@ -131,6 +141,23 @@ Track.prototype.drawName = function(ctx, dt) {
 		ctx.fillStyle = "black";
 		ctx.fillText(this.wins, this.width - 15, ctx.canvas.height - 46);
 	}
+};
+
+Track.prototype.drawDead = function(ctx, dt) {
+	ctx.save();
+	ctx.globalAlpha = 0.75 + Math.sin(this.hasBeenDeadFor / 1000 * Math.PI * 2)/4;
+	ctx.drawImage(Track.deadImage, this.width / 2 - 64, ctx.canvas.height/2 - 64);
+	ctx.restore();
+};
+
+Track.prototype.drawPaused = function(ctx, dt) {
+	ctx.save();
+	ctx.fillStyle = "orange";
+	ctx.shadowBlur = 20;
+	ctx.shadowColor = "black";
+	ctx.fillRect(this.width / 2 - 48, ctx.canvas.height/2 - 48, 32, 96);
+	ctx.fillRect(this.width / 2 + 16, ctx.canvas.height/2 - 48, 32, 96);
+	ctx.restore();
 };
 
 Track.prototype.drawLanes = function(ctx, dt) {
