@@ -26,10 +26,16 @@ function parseSearch() {
 	var args = {};
 	location.search.replace(/^\?/,'').split('&').forEach(function(nameValue) {
 		var nameAndValue = nameValue.split('=');
-		args[nameAndValue[0]] = nameAndValue[1];
+		args[nameAndValue[0]] = decodeIt(nameAndValue[1]);
 	});
 
 	return args;
+
+	function decodeIt(str) {
+		var span = document.createElement('span');
+		span.innerHTML = unescape(str).replace(/\+/g, " ");
+		return span.innerHTML;
+	}
 }
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
