@@ -11,6 +11,7 @@ function Track(game, id, name) {
 
 	this.won = false;
 	this.lost = false;
+	this.ready = true;
 
 	this.wins = 0;
 
