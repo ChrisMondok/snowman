@@ -15,7 +15,7 @@ Snowman.MAX_SPEED = 0.004;
 Snowman.CARROT_SPEED = 0.005;
 
 Snowman.prototype.speed = 1/1000;
-Snowman.prototype.acceleration = 0.0001;
+Snowman.prototype.acceleration = 0.0002;
 
 Snowman.prototype.freeze = function() {
 	this.frozen += 3000;
