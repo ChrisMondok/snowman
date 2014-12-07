@@ -8,6 +8,7 @@ function log(message) {
 
 function letsDoThis() {
 	var canvas = document.querySelector("canvas");
+	var canvasContainer = document.querySelector("#canvas-container");
 
 	var logUl = document.getElementById("log");
 
@@ -19,8 +20,8 @@ function letsDoThis() {
 	};
 
 	function resizeCanvas() {
-		canvas.setAttribute("width", canvas.offsetWidth);
-		canvas.setAttribute("height", canvas.offsetHeight);
+		canvas.setAttribute("width", canvasContainer.offsetWidth);
+		canvas.setAttribute("height", canvasContainer.offsetHeight);
 	}
 
 	resizeCanvas();

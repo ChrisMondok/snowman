@@ -28,6 +28,8 @@ Game.prototype.generateNextLevel = function() {
 		case 1:
 			return new TrackFactory(4, 50, 50);
 			break;
+		case 2:
+			return new TrackFactory(5, 10, 50);
 		default:
 			break;
 	}
