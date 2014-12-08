@@ -9,6 +9,7 @@ function log(message) {
 function letsDoThis() {
 	var canvas = document.querySelector("canvas");
 	var canvasContainer = document.querySelector("#canvas-container");
+	var fullscreenButton = document.querySelector("#fullscreen-button");
 
 	var logUl = document.getElementById("log");
 
@@ -53,6 +54,18 @@ function letsDoThis() {
 
 	document.getElementById("drop-dead-players-button").addEventListener("click", function() {
 		game.dropDeadPlayers();
+	});
+
+	fullscreenButton.addEventListener("click", function() {
+		if (document.body.requestFullscreen) {
+			document.body.requestFullscreen();
+		} else if (document.body.msRequestFullscreen) {
+			document.body.msRequestFullscreen();
+		} else if (document.body.mozRequestFullScreen) {
+			document.body.mozRequestFullScreen();
+		} else if (document.body.webkitRequestFullscreen) {
+			document.body.webkitRequestFullscreen();
+		}
 	});
 }
 
