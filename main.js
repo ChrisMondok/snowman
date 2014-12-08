@@ -16,7 +16,7 @@ function letsDoThis() {
 		var li = document.createElement("li");
 		li.innerHTML = message;
 		logUl.appendChild(li);
-		li.scrollIntoView();
+		logUl.scrollTop = logUl.scrollHeight - logUl.offsetHeight;
 	};
 
 	function resizeCanvas() {
