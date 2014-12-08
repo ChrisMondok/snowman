@@ -29,6 +29,10 @@ canvas {
 	position: relative;
 }
 
+#url-display {
+	overflow-x: scroll;
+}
+
 #right-side {
 	width: 276px;
 	flex: 0 0 auto;
