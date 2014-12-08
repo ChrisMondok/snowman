@@ -39,7 +39,7 @@ Game.prototype.generateNextLevel = function() {
 	}
 	log("Out of difficulty levels, try this random one");
 	var width = 3 + Math.floor(Math.random() * 5);
-	var height = 20 + Math.floor(Math.random() * 100);
+	var height = 20 + Math.floor(Math.random() * 50);
 	var obstacles = Math.min(100, Math.floor((0.2 * Math.random() + 0.1) * width * height));
 	return new TrackFactory(width, height, obstacles);
 };
@@ -60,7 +60,6 @@ Game.prototype.reset = function() {
 	this.tracks.filter({won: false}).forEach(function(t) {
 		t.lose();
 	});
-
 };
 
 Game.prototype.stepInterval = 1000;
