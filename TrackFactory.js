@@ -12,7 +12,7 @@ function TrackFactory(lanes, rows, numObstacles) {
 
 	var solution = this.getSolution();
 
-	while(this.entities.length < numObstacles && retries < 20) {
+	while(this.entities.length < numObstacles && retries < 5) {
 		var newObstacle = this.makeObstacle();
 
 		var nope = this.entities.any({x: newObstacle.x, y: newObstacle.y});
