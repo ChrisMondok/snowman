@@ -10,15 +10,28 @@ function TrackFactory(lanes, rows, numObstacles) {
 
 	var started = new Date();
 
+	var solution = this.getSolution();
+
 	while(this.entities.length < numObstacles && retries < 20) {
 		var newObstacle = this.makeObstacle();
-		if( this.entities.any({x: newObstacle.x, y: newObstacle.y}) ||
-			this.levelIsNotPlayable(this.entities.concat(newObstacle)) ) {
-			retries++;
+
+		var nope = this.entities.any({x: newObstacle.x, y: newObstacle.y});
+
+		if( !nope &&
+			newObstacle instanceof Rock &&
+			newObstacleIsInSolution(newObstacle)) {
+				var newSolution = this.getSolution(newObstacle);
+				if(!newSolution)
+					nope = true;
+				else
+					solution = newSolution;
 		}
+
+		if(nope)
+			retries++;
 		else {
-			this.entities.push(newObstacle);
 			retries = 0;
+			this.entities.push(newObstacle);
 		}
 	}
 
@@ -29,12 +42,23 @@ function TrackFactory(lanes, rows, numObstacles) {
 
 	var duration = new Date() - started;
 	log("Level created in "+duration/1000+" ms");
+
+	function newObstacleIsInSolution(newObstacle) {
+		var node = solution;
+		while(node) {
+			if(node.x == newObstacle.x && node.y == newObstacle.y)
+				return true;
+			node = node.parent;
+		}
+		return false;
+	}
 }
 
-window.lastPath = null;
-TrackFactory.prototype.levelIsNotPlayable = function(obstacles) {
-	lastPath = findPathToFinish(obstacles, {x: 0, y: this.rows - 1}, this.lanes);
-	return !lastPath;
+TrackFactory.prototype.getSolution = function(newObstacle) {
+	var o = this.entities;
+	if(newObstacle)
+		o = o.concat(newObstacle);
+	return findPathToFinish(this.entities.concat(newObstacle), {x: 0, y: this.rows - 1}, this.lanes);
 };
 
 (function() {
