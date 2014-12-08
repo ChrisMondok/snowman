@@ -11,13 +11,16 @@ function TrackFactory(lanes, rows, numObstacles) {
 	var started = new Date();
 
 	while(this.entities.length < numObstacles && retries < 20) {
-		var newObstacle = this.makeObstacle();
-		if( this.entities.any({x: newObstacle.x, y: newObstacle.y}) ||
-			this.levelIsNotPlayable(this.entities.concat(newObstacle)) ) {
+		var newObstacles = this.makeObstacles(Math.min(10, numObstacles - this.entities.length));
+
+		var potentiallyAllObstacles = this.entities.concat(newObstacles);
+
+		if( this.entitiesAreOverlapping(potentiallyAllObstacles) ||
+			this.levelIsNotPlayable(potentiallyAllObstacles) ) {
 			retries++;
 		}
 		else {
-			this.entities.push(newObstacle);
+			this.entities.add(newObstacles);
 			retries = 0;
 		}
 	}
@@ -31,10 +34,18 @@ function TrackFactory(lanes, rows, numObstacles) {
 	log("Level created in "+duration/1000+" ms");
 }
 
-window.lastPath = null;
 TrackFactory.prototype.levelIsNotPlayable = function(obstacles) {
-	lastPath = findPathToFinish(obstacles, {x: 0, y: this.rows - 1}, this.lanes);
-	return !lastPath;
+	return !findPathToFinish(obstacles, {x: 0, y: this.rows - 1}, this.lanes);
+};
+
+TrackFactory.prototype.entitiesAreOverlapping = function(obstacles) {
+	for(var i = 1; i < obstacles.length; i++) {
+		for(var j = 0; j < i; j++) {
+			if(obstacles[i].x == obstacles[j].x && obstacles[i].y == obstacles[j].y)
+				return true;
+		}
+	}
+	return false;
 };
 
 (function() {
@@ -46,12 +57,14 @@ TrackFactory.prototype.levelIsNotPlayable = function(obstacles) {
 	for(i = 0; i < 1; i++)
 		weightedItemsCollection.push(ItemFactory);
 
-	TrackFactory.prototype.makeObstacle = function() {
-		
-		var obstacle = new (weightedItemsCollection.sample());
-		obstacle.x = Math.floor(Math.random() * this.lanes);
-		//don't put obstacles in the bottom row
-		obstacle.y = Math.floor(Math.random() * (this.rows - 2));
+	TrackFactory.prototype.makeObstacles = function(numObstacles) {
+		var output = [];
+		for(var i = 0; i < numObstacles; i++) {
+			var obstacle = new (weightedItemsCollection.sample());
+			obstacle.x = Math.floor(Math.random() * this.lanes);
+			//don't put obstacles in the bottom row
+			obstacle.y = Math.floor(Math.random() * (this.rows - 2));
+		}
 
 		return obstacle;
 	};
