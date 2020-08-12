@@ -42,8 +42,7 @@ Track.prototype.reset = function(trackFactory) {
 		return pawn instanceof ItemFactory;
 	}).forEach(function(factory) {
 		var item = factory.constructItem();
-		this.pawns.remove(factory);
-		this.pawns.add(item);
+		this.pawns.splice(this.pawns.indexOf(factory), 1, item);
 	}, this);
 
 	this.won = false;
@@ -57,7 +56,7 @@ Track.prototype.win = function() {
 		return;
 	var snowman = this.getSnowman();
 	if(snowman)
-		this.pawns.remove(snowman);
+		this.pawns.splice(this.pawns.indexOf(snowman), 1);
 	this.playSound("win");
 	this.won = true;
 	this.wins++;
@@ -88,7 +87,7 @@ Track.prototype.tick = function(dt) {
 };
 
 Track.prototype.sortPawns = function() {
-	this.pawns = this.pawns.sortBy(function(p) {return p.y.ceil();});
+	this.pawns.sort((a, b) => Math.ceil(a.y) < Math.ceil(b.y) ? -1 : 1);
 };
 
 Track.prototype.moveLeft = function() {
@@ -145,7 +144,7 @@ Track.prototype.canMoveOnto = function(x, y) {
 		return false;
 	if(y < 0 || y >= this.rows)
 		return false;
-	return !this.pawns.filter({x: x, y: y, blocksMovement: true}).length;
+	return !this.pawns.some(p => p.x === x && p.y === y && p.blocksMovement);
 };
 
 Track.prototype.drawName = function(ctx, dt) {

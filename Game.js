@@ -57,7 +57,7 @@ Game.prototype.reset = function() {
 
 	this.delay = 2000;
 
-	this.tracks.filter({won: false}).forEach(function(t) {
+	this.tracks.filter(t => t.won === false).forEach(function(t) {
 		t.lose();
 	});
 };
@@ -66,12 +66,12 @@ Game.prototype.stepInterval = 1000;
 
 Game.prototype.tick = function(dt) {
 
-	if(this.tracks.any({won: true})) {
+	if(this.tracks.some(t => t.won)) {
 		this.difficulty++;
 		setTimeout(this.reset.bind(this));
 	}
 
-	if(this.tracks.length && this.tracks.all({lost: true})) {
+	if(this.tracks.length && this.tracks.every(t => t.lost)) {
 		playSound("everybodylost");
 		setTimeout(this.reset.bind(this));
 	}
@@ -141,7 +141,7 @@ Game.prototype.peerOpened = function(peer) {
 };
 
 Game.prototype.freezeOtherTracks = function(track) {
-	this.tracks.exclude(track).forEach(function(target) {
+	this.tracks.filter(t => t !== track).forEach(function(target) {
 		var snowman = target.getSnowman();
 		if(snowman)
 			snowman.freeze();
@@ -151,7 +151,7 @@ Game.prototype.freezeOtherTracks = function(track) {
 Game.prototype.gotConnection = function(peer, dataConnection) {
 	var playerId = dataConnection.peer;
 	var name = dataConnection.metadata.name;
-	var track = this.tracks.find({id: playerId});
+	var track = this.tracks.find(t => t.id == playerId);
 	if(!track) {
 		log(name+" joined");
 		track = new Track(this, playerId, name);
@@ -190,7 +190,7 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 				log(name + " quit");
 				track.dead = true;
 				dataConnection.close();
-				this.tracks.remove(track);
+				this.tracks.splice(this.tracks.indexOf(track), 1);
 				break;
 			case "reset":
 				log(name+ " has restarted");
@@ -218,14 +218,14 @@ Game.prototype.gotConnection = function(peer, dataConnection) {
 };
 
 Game.prototype.dropDeadPlayers = function() {
-	this.tracks.remove({dead: true});
+	this.tracks = this.tracks.filter(t => !t.dead);
 };
 
 Object.defineProperty(Game.prototype, "paused", {
 	get: function() {
 		if(this.delay)
 			return true;
-		return game.tracks.any({ready: false});
+		return game.tracks.some(t => !t.ready);
 	}
 });
 

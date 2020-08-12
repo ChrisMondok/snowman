@@ -1,5 +1,5 @@
 var Grass = extend(Pawn, function Grass() {
-	this.image = Grass.images.sample();
+	this.image = Grass.images[Math.floor(Math.random() * Grass.images.length)];
 });
 
 Grass.prototype.blocksMovement = false;

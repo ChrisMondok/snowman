@@ -28,16 +28,16 @@ function setUpButtons() {
 	var resetButton = document.getElementById("reset-button");
 
 	document.addEventListener("keydown", function(k) {
-		if((k.key || k.keyIdentifier) == "Left")
+		if(k.key === "ArrowLeft")
 			send("pressedLeft");
-		if((k.key || k.keyIdentifier) == "Right")
+		if(k.key === "ArrowRight")
 			send("pressedRight");
 	});
 
 	document.addEventListener("keyup", function(k) {
-		if((k.key || k.keyIdentifier) == "Left")
+		if(k.key === "ArrowLeft")
 			send("releasedLeft");
-		if((k.key || k.keyIdentifier) == "Right")
+		if(k.key === "ArrowRight")
 			send("releasedRight");
 	});
 

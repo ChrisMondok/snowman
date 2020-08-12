@@ -15,7 +15,7 @@ function TrackFactory(lanes, rows, numObstacles) {
 	while(this.entities.length < numObstacles && retries < 5) {
 		var newObstacle = this.makeObstacle();
 
-		var nope = this.entities.any({x: newObstacle.x, y: newObstacle.y});
+		var nope = this.entities.some(e => e.x == newObstacle.x && e.y == newObstacle.y);
 
 		if( !nope &&
 			newObstacle instanceof Rock &&
@@ -72,7 +72,7 @@ TrackFactory.prototype.getSolution = function(newObstacle) {
 
 	TrackFactory.prototype.makeObstacle = function() {
 		
-		var obstacle = new (weightedItemsCollection.sample());
+		var obstacle = new (sample(weightedItemsCollection));
 		obstacle.x = Math.floor(Math.random() * this.lanes);
 		//don't put obstacles in the bottom row
 		obstacle.y = Math.floor(Math.random() * (this.rows - 2));
@@ -80,3 +80,8 @@ TrackFactory.prototype.getSolution = function(newObstacle) {
 		return obstacle;
 	};
 })();
+
+function sample(arr) {
+	const i = Math.floor(Math.random() * arr.length);
+	return arr[i];
+}

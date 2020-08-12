@@ -39,13 +39,13 @@ Snowman.prototype.tick = function(dt) {
 		return;
 	}
 
-	if(!this.track.canMoveOnto(this.x, this.y.floor())) {
-		this.y = (this.y).floor() + 1;
+	if(!this.track.canMoveOnto(this.x, Math.floor(this.y))) {
+		this.y = Math.floor(this.y) + 1;
 		this.speed = Snowman.prototype.speed;
 		if(this.y != lastY) {
 			this.track.playSound("stopped");
 			this.track.vibrate(100);
-			var pathToFinish = findPathToFinish(this.track.pawns, {x: this.x.round(), y: this.y.ceil()}, this.track.lanes);
+			var pathToFinish = findPathToFinish(this.track.pawns, {x: Math.round(this.x), y: Math.ceil(this.y)}, this.track.lanes);
 			if(!pathToFinish)
 				this.track.lose();
 		}
@@ -63,8 +63,8 @@ Snowman.prototype.tick = function(dt) {
 	}
 
 
-	if(this.y.ceil() != lastY.ceil()) {
-		var pawnsIAmOnTopOf = this.track.pawns.filter({x: this.x, y: this.y.ceil()});
+	if(Math.ceil(this.y) != Math.ceil(lastY)) {
+		var pawnsIAmOnTopOf = this.track.pawns.filter(p => p.x === this.x && p.y === Math.ceil(this.y));
 
 		var notOnGrass = true;
 
@@ -73,15 +73,15 @@ Snowman.prototype.tick = function(dt) {
 				notOnGrass = false;
 				this.speed /= 2;
 				this.track.playSound("grass");
-				this.track.pawns.remove(otherPawn);
+				this.track.pawns.splice(this.track.pawns.indexOf(otherPawn), 1);
 			}
 			if(otherPawn instanceof IcePowerup) {
 				this.track.game.freezeOtherTracks(this.track);
-				this.track.pawns.remove(otherPawn);
+				this.track.pawns.splice(this.track.pawns.indexOf(otherPawn), 1);
 			}
 			if(otherPawn instanceof CarrotPowerup) {
 				this.carrot = 2000;
-				this.track.pawns.remove(otherPawn);
+				this.track.pawns.splice(this.track.pawns.indexOf(otherPawn), 1);
 			}
 		}, this);
 
@@ -95,14 +95,14 @@ Snowman.prototype.size = GRID_SIZE * (3/5);
 Snowman.prototype.moveLeft = function() {
 	if(this.frozen)
 		return;
-	if(this.track.canMoveOnto(this.x - 1, this.y.round()))
+	if(this.track.canMoveOnto(this.x - 1, Math.round(this.y)))
 		this.x--;
 };
 
 Snowman.prototype.moveRight = function() {
 	if(this.frozen)
 		return;
-	if(this.track.canMoveOnto(this.x + 1, this.y.round()))
+	if(this.track.canMoveOnto(this.x + 1, Math.round(this.y)))
 		this.x++;
 };
 
@@ -120,7 +120,7 @@ Snowman.prototype.draw = function(ctx, dt) {
 		z = 0;
 	}
 	else {
-		y = (this.y.ceil() - easing.quadraticInOut(0, 1, animPhase) + 0.5) * GRID_SIZE;
+		y = (Math.ceil(this.y) - easing.quadraticInOut(0, 1, animPhase) + 0.5) * GRID_SIZE;
 		z = easing.quadraticInOut(0, 1, Math.sin(animPhase * Math.PI));
 	}
 
@@ -167,7 +167,7 @@ Snowman.prototype.draw = function(ctx, dt) {
 	ctx.stroke();
 
 	if(this.frozen) {
-		ctx.drawImage(Snowman.iceImage, this.px,  this.py - 32);
+		ctx.drawImage(Snowman.iceImage, this.px, this.py - 32);
 	}
 };
 

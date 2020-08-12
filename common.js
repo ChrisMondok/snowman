@@ -1,12 +1,10 @@
 function makePeer(callback, desiredId) {
 	var peer;
 
-	var peerOptions = {key: "u9w2z80r7a5uerk9"};
-
 	if(desiredId)
-		peer = new Peer(desiredId, {key: "u9w2z80r7a5uerk9"});
+		peer = new Peer(desiredId);
 	else
-		peer = new Peer(peerOptions);
+		peer = new Peer();
 
 	peer.on("error", function(err) {
 		if(err.type == "unavailable-id")

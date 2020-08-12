@@ -4,8 +4,8 @@ function findPathToFinish(obstacles, origin, numLanes) {
 	var closed = [];
 
 	while(open.length) {
-		var thisNode = open.min('y');
-		open.removeAt(open.indexOf(thisNode));
+		var thisNode = open.reduce((a, b) => a.y < b.y ? a : b);
+		open.splice(open.indexOf(thisNode, 1));
 
 		var successors = getSuccessors(thisNode);
 		closed.push(thisNode);
@@ -16,7 +16,7 @@ function findPathToFinish(obstacles, origin, numLanes) {
 				window.lastPath = s;
 				return s;
 			}
-			if(!open.concat(closed).any({x: s.x, y: s.y})) {
+			if(!open.concat(closed).some(node => node.x == s.x && node.y == s.y)) {
 				open.push(s);
 			}
 		}
@@ -45,7 +45,8 @@ function findPathToFinish(obstacles, origin, numLanes) {
 			return false;
 		if(y < 0)
 			return false;
-		return !obstacles.any({x: x, y: y, blocksMovement: true});
+		// This was probably a bug, but obstacles would contain undefined at the first index???
+		return !obstacles.filter(o => o !== undefined).some(o => o.x ==x && o.y == y && o.blocksMovement);
 	}
 
 	return null;

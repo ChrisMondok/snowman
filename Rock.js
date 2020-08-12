@@ -1,5 +1,5 @@
 var Rock = extend(Pawn, function Rock() {
-	this.image = Rock.images.sample();
+	this.image = Rock.images[Math.floor(Math.random() * Rock.images.length)];
 });
 
 Rock.prototype.blocksMovement = true;
